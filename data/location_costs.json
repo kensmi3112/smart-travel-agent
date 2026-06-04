@@ -1,0 +1,40 @@
+{
+  "locations": {
+    "Shepparton": {
+      "budget": 2800,
+      "comfortable": 3800,
+      "luxury": 5200
+    },
+    "Gold Coast": {
+      "budget": 3800,
+      "comfortable": 5200,
+      "luxury": 7500
+    },
+    "Cairns": {
+      "budget": 3500,
+      "comfortable": 4800,
+      "luxury": 6800
+    },
+    "Portugal": {
+      "budget": 3200,
+      "comfortable": 4200,
+      "luxury": 6200
+    },
+    "Thailand": {
+      "budget": 2500,
+      "comfortable": 3800,
+      "luxury": 5500
+    },
+    "Ballarat": {
+      "budget": 3200,
+      "comfortable": 4200,
+      "luxury": 5800
+    }
+  },
+  "adjustment_factors": {
+    "single": 0.65,
+    "luxury": 1.45,
+    "budget": 0.75
+  },
+  "last_updated": "2026-05-31"
+}
