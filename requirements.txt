@@ -1,6 +1,9 @@
-openai
-requests
-python-dotenv
+# Core dependencies
 streamlit
 weasyprint
 markdown
+
+# API clients
+openai          # Used by TravelRetirementAgent (compatible with Grok)
+requests
+python-dotenv   # For loading secrets (optional but useful)

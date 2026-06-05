@@ -6,7 +6,7 @@ from agents.travel_retirement_agent import TravelRetirementAgent
 from translations import translations
 
 st.set_page_config(
-    page_title="🌴 Smart Travel & Retirement Agent",
+    page_title="🌴 Smart Travel Agent",
     page_icon="🌴",
     layout="wide"
 )
@@ -65,6 +65,10 @@ if "selected_language" not in st.session_state:
     st.session_state.selected_language = "English"
 if "has_unsaved_changes" not in st.session_state:
     st.session_state.has_unsaved_changes = False
+if "user_location" not in st.session_state:
+    st.session_state.user_location = "Australia"
+if "user_currency" not in st.session_state:
+    st.session_state.user_currency = "AUD"
 
 selected_lang_display = st.selectbox("🌐 Language", list(translations.keys()), index=0, key="lang_selector")
 
@@ -87,17 +91,36 @@ with col_title:
 
 st.markdown(f'<p class="subtitle">{t["subtitle"]}</p>', unsafe_allow_html=True)
 
-# ==================== HERO BANNER (Fixed deprecation) ====================
-# st.image("hero_banner.jpg", 
-#         use_container_width=True,
-#         caption="Your next relaxed adventure awaits...")
-#
-# st.markdown("---")
+# Hero Banner
+st.image("hero_banner.jpg", 
+         use_container_width=True,
+         caption="Your next relaxed adventure awaits...")
+
+st.markdown("---")
 
 # ==================== SIDEBAR ====================
 with st.sidebar:
     st.header(t["traveler_header"])
     traveler_type = st.selectbox(t["who_traveling"], t["traveler_options"], index=0)
+    
+    # ==================== NEW: Location & Currency ====================
+    col_loc, col_cur = st.columns(2)
+    with col_loc:
+        location = st.text_input(t["location_label"], st.session_state.user_location, key="location_input")
+        if location != st.session_state.user_location:
+            st.session_state.user_location = location
+            st.session_state.agent.update_preference("location", location)
+    
+    with col_cur:
+        currency = st.selectbox(
+            t["currency_label"], 
+            ["AUD", "USD", "EUR", "GBP", "CAD", "JPY", "CNY", "INR"],
+            index=["AUD", "USD", "EUR", "GBP", "CAD", "JPY", "CNY", "INR"].index(st.session_state.user_currency),
+            key="currency_input"
+        )
+        if currency != st.session_state.user_currency:
+            st.session_state.user_currency = currency
+            st.session_state.agent.update_preference("currency", currency)
     
     st.divider()
     st.header(t["actions_header"])
@@ -146,7 +169,7 @@ with st.sidebar:
 
     if st.button(t["generate_btn"], help=t.get("tooltip_generate", "")):
         with st.spinner(t["thinking"]):
-            full_prompt = f"Respond in {selected_lang_display.split('(')[0].strip()}. {t['full_proposal_prompt']}"
+            full_prompt = f"Respond in {selected_lang_display.split('(')[0].strip()}. User is located in {st.session_state.user_location} and prefers {st.session_state.user_currency}. {t['full_proposal_prompt']}"
             response = st.session_state.agent.ask(full_prompt)
             st.session_state.messages.append({"role": "assistant", "content": response})
             st.session_state.has_unsaved_changes = True
@@ -199,12 +222,12 @@ if prompt := st.chat_input(t["input_placeholder"]):
         st.markdown(prompt)
     with st.chat_message("assistant"):
         with st.spinner(t["thinking"]):
-            full_prompt = f"Respond in {selected_lang_display.split('(')[0].strip()}. {prompt}"
+            full_prompt = f"Respond in {selected_lang_display.split('(')[0].strip()}. User is located in {st.session_state.user_location} and prefers {st.session_state.user_currency}. {prompt}"
             response = st.session_state.agent.ask(full_prompt)
             st.markdown(response)
     st.session_state.messages.append({"role": "assistant", "content": response})
 
-# Example Prompt - NOW DIRECTLY UNDER THE CHAT INPUT
+# Example Prompt
 st.markdown(f'<div class="example-prompt">{t.get("example_prompt", "💡 Example: Create a 10-day relaxed itinerary for Dubai for a couple who like galleries and gentle walks.")}</div>', unsafe_allow_html=True)
 
 st.caption(t["footer"])

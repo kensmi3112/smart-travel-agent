@@ -1,50 +1,60 @@
-import json
-import os
-from datetime import datetime
+from core.agent_base import AgentBase
+from tools.file_manager import FileManager
+from tools.web_search import web_search
+from tools.budget_calculator import BudgetCalculator
+from tools.itinerary_generator import ItineraryGenerator
+from tools.user_preferences import UserPreferences
+from tools.tool_definitions import get_tool_definitions
+from core.config import Config
 
-class UserPreferences:
-    def __init__(self, filename="user_preferences.json"):
-        self.filename = filename
-        self.preferences = self._load_preferences()
-    
-    def _load_preferences(self):
-        if os.path.exists(self.filename):
-            try:
-                with open(self.filename, "r", encoding="utf-8") as f:
-                    return json.load(f)
-            except:
-                return self._get_default_preferences()
-        return self._get_default_preferences()
-    
-    def _get_default_preferences(self):
-        return {
-            "mobility": "standard",
-            "budget_style": "comfortable",
-            "interests": ["nature", "relaxation", "gentle walks"],
-            "couple": True,
-            "dietary": "none",
-            "preferred_pace": "relaxed",
-            "traveler_type": "Retiree Couple"
-        }
+class TravelRetirementAgent(AgentBase):
+    def __init__(self):
+        system_prompt = """You are an expert, warm, and highly capable Travel Planning Agent.
+
+You have access to tools and remember user preferences.
+Be practical, empathetic, and well-organized."""
+        
+        super().__init__(system_prompt, get_tool_definitions())
+        
+        self.file_manager = FileManager(Config.PLANS_FOLDER)
+        self.budget_calculator = BudgetCalculator()
+        self.itinerary_generator = ItineraryGenerator()
+        self.preferences = UserPreferences()
     
     def update_preference(self, key: str, value):
-        self.preferences[key] = value
-        self._save_preferences()
+        """Update user preference safely"""
+        try:
+            self.preferences.update(key, value)
+        except AttributeError:
+            # Fallback if update method doesn't exist yet
+            if not hasattr(self.preferences, 'preferences'):
+                self.preferences.preferences = {}
+            self.preferences.preferences[key] = value
+            print(f"Preference updated: {key} = {value}")
     
-    def get_preference(self, key: str):
-        return self.preferences.get(key)
+    def save_plan(self, title: str = None):
+        if not title:
+            title = "Travel_Plan"
+        filename = self.file_manager.save_conversation(title, self.messages)
+        print(f"✅ Plan saved successfully: {filename}")
+        return filename
     
-    def get_all(self):
-        return self.preferences.copy()
-    
-    def _save_preferences(self):
-        with open(self.filename, "w", encoding="utf-8") as f:
-            json.dump(self.preferences, f, indent=2)
-    
+    def export_markdown_plan(self, title: str = None):
+        """Export current conversation as Markdown"""
+        if not title:
+            title = "Travel_Plan"
+        try:
+            filename = self.file_manager.export_markdown(title, self.messages)
+            return filename
+        except Exception as e:
+            print(f"❌ Failed to export Markdown: {e}")
+            return None
+           
     def show_preferences(self):
-        """Display preferences in Streamlit"""
-        import streamlit as st
-        st.subheader("📋 Current User Preferences")
-        for key, value in self.preferences.items():
-            nice_key = key.replace("_", " ").title()
-            st.write(f"**{nice_key}:** {value}")
+        """Display current user preferences"""
+        prefs = self.preferences.preferences
+        print("\n📋 Current User Preferences:")
+        print("-" * 40)
+        for key, value in prefs.items():
+            print(f"• {key.replace('_', ' ').title()}: {value}")
+        print("-" * 40)

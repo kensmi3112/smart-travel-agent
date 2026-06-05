@@ -40,10 +40,17 @@
 	},
 	"expanded_folders":
 	[
-		"/Users/kennethsmith/grok-agents"
+		"/Users/kennethsmith/grok-agents/smart-travel-agent"
 	],
 	"file_history":
 	[
+		"/Users/kennethsmith/grok-agents/smart-travel-agent/app.py",
+		"/Users/kennethsmith/grok-agents/grok-agents.sublime-project",
+		"/Users/kennethsmith/grok-agents/translations.py",
+		"/Users/kennethsmith/grok-agents/smart-travel-agent/.streamlit/secrets.toml",
+		"/Users/kennethsmith/grok-agents/smart-travel-agent/translations.py",
+		"/Users/kennethsmith/grok-agents/app.py",
+		"/Users/kennethsmith/grok-agents/smart-travel-agent/requirements.txt",
 		"/Users/kennethsmith/grok-agents/travel_plans/my_dubai_travel_plan_20260602_0535.md",
 		"/Users/kennethsmith/grok-agents/travel_plans/test_plan_20260601_1544.md",
 		"/Users/kennethsmith/grok-agents/travel_plans/gold_coast_test_20260601_1137.md",
@@ -56,7 +63,7 @@
 	],
 	"find":
 	{
-		"height": 0.0
+		"height": 38.0
 	},
 	"find_in_files":
 	{
@@ -70,6 +77,14 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"hero",
+			"input_placeholder",
+			"Tips",
+			"usage",
+			"stChatInput",
+			"tool",
+			"?",
+			"backg"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -96,7 +111,7 @@
 	],
 	"incremental_find":
 	{
-		"height": 0.0
+		"height": 24.0
 	},
 	"input":
 	{
@@ -133,10 +148,10 @@
 		]
 	},
 	"pinned_build_system": "",
-	"project": "grok-agents.sublime-project",
+	"project": "smart-travel-agent.sublime-project",
 	"replace":
 	{
-		"height": 0.0
+		"height": 44.0
 	},
 	"save_all_on_build": true,
 	"select_file":
